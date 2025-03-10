@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>User</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+     body {
+        color: #566787;
+		background: #f5f5f5;
+		font-family: 'Varela Round', sans-serif;
+		font-size: 13px;
+	}
+	.table-wrapper {
+        background: #fff;
+        padding: 20px 25px;
+        margin: 30px 0;
+		border-radius: 3px;
+        box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    }
+	.table-title {        
+		padding-bottom: 15px;
+		background:#4a90e2;
+		color: #fff;
+		padding: 16px 30px;
+		margin: -20px -25px 10px;
+		border-radius: 3px 3px 0 0;
+    }
+    .table-title h2 {
+		margin: 5px 0 0;
+		font-size: 24px;
+	}
+	.table-title .btn-group {
+		float: right;
+	}
+	.table-title .btn {
+		color: #fff;
+		float: right;
+		font-size: 13px;
+		border: none;
+		min-width: 50px;
+		border-radius: 2px;
+		border: none;
+		outline: none !important;
+		margin-left: 10px;
+	}
+	.table-title .btn i {
+		float: left;
+		font-size: 21px;
+		margin-right: 5px;
+	}
+	.table-title .btn span {
+		float: left;
+		margin-top: 2px;
+	}
+    table.table tr th, table.table tr td {
+        border-color: #e9e9e9;
+		padding: 12px 15px;
+		vertical-align: middle;
+    }
+	table.table tr th:first-child {
+		width: 60px;
+	}
+	table.table tr th:last-child {
+		width: 100px;
+	}
+    table.table-striped tbody tr:nth-of-type(odd) {
+    	background-color: #fcfcfc;
+	}
+	table.table-striped.table-hover tbody tr:hover {
+		background: #f5f5f5;
+	}
+    table.table th i {
+        font-size: 13px;
+        margin: 0 5px;
+        cursor: pointer;
+    }	
+    table.table td:last-child i {
+		opacity: 0.9;
+		font-size: 22px;
+        margin: 0 5px;
+    }
+	table.table td a {
+		font-weight: bold;
+		color: #566787;
+		display: inline-block;
+		text-decoration: none;
+		outline: none !important;
+	}
+	table.table td a:hover {
+		color: #2196F3;
+	}
+	table.table td a.edit {
+        color: #FFC107;
+    }
+    table.table td a.delete {
+        color: #F44336;
+    }
+    table.table td a.email {
+        color: #4285F4;
+    }
+    table.table td i {
+        font-size: 19px;
+    }
+	table.table .avatar {
+		border-radius: 50%;
+		vertical-align: middle;
+		margin-right: 10px;
+	}
+    .pagination {
+        float: right;
+        margin: 0 0 5px;
+    }
+    .pagination li a {
+        border: none;
+        font-size: 13px;
+        min-width: 30px;
+        min-height: 30px;
+        color: #999;
+        margin: 0 2px;
+        line-height: 30px;
+        border-radius: 2px !important;
+        text-align: center;
+        padding: 0 6px;
+    }
+    .pagination li a:hover {
+        color: #666;
+    }	
+    .pagination li.active a, .pagination li.active a.page-link {
+        background: #03A9F4;
+    }
+    .pagination li.active a:hover {        
+        background: #0397d6;
+    }
+	.pagination li.disabled i {
+        color: #ccc;
+    }
+    .pagination li i {
+        font-size: 16px;
+        padding-top: 6px
+    }
+    .hint-text {
+        float: left;
+        margin-top: 10px;
+        font-size: 13px;
+    }    
+	/* Custom checkbox */
+	.custom-checkbox {
+		position: relative;
+	}
+	.custom-checkbox input[type="checkbox"] {    
+		opacity: 0;
+		position: absolute;
+		margin: 5px 0 0 3px;
+		z-index: 9;
+	}
+	.custom-checkbox label:before{
+		width: 18px;
+		height: 18px;
+	}
+	.custom-checkbox label:before {
+		content: '';
+		margin-right: 10px;
+		display: inline-block;
+		vertical-align: text-top;
+		background: white;
+		border: 1px solid #bbb;
+		border-radius: 2px;
+		box-sizing: border-box;
+		z-index: 2;
+	}
+	.custom-checkbox input[type="checkbox"]:checked + label:after {
+		content: '';
+		position: absolute;
+		left: 6px;
+		top: 3px;
+		width: 6px;
+		height: 11px;
+		border: solid #000;
+		border-width: 0 3px 3px 0;
+		transform: inherit;
+		z-index: 3;
+		transform: rotateZ(45deg);
+	}
+	.custom-checkbox input[type="checkbox"]:checked + label:before {
+		border-color: #03A9F4;
+		background: #03A9F4;
+	}
+	.custom-checkbox input[type="checkbox"]:checked + label:after {
+		border-color: #fff;
+	}
+	.custom-checkbox input[type="checkbox"]:disabled + label:before {
+		color: #b8b8b8;
+		cursor: auto;
+		box-shadow: none;
+		background: #ddd;
+	}
+	/* Modal styles */
+	.modal .modal-dialog {
+		max-width: 400px;
+	}
+	.modal .modal-header, .modal .modal-body, .modal .modal-footer {
+		padding: 20px 30px;
+	}
+	.modal .modal-content {
+		border-radius: 3px;
+	}
+	.modal .modal-footer {
+		background: #ecf0f1;
+		border-radius: 0 0 3px 3px;
+	}
+    .modal .modal-title {
+        display: inline-block;
+    }
+	.modal .form-control {
+		border-radius: 2px;
+		box-shadow: none;
+		border-color: #dddddd;
+	}
+	.modal textarea.form-control {
+		resize: vertical;
+	}
+	.modal .btn {
+		border-radius: 2px;
+		min-width: 100px;
+	}	
+	.modal form label {
+		font-weight: normal;
+	}
+
+
+	
+	
+
+
+  </style>
+  <body>
+    <div class="container">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6">
+						<h2>Manage <b>Vehicles</b></h2>
+					</div>
+					<div class="col-sm-6">
+                        <!-- <a href="{% url 'newapp:home' %}" class="material-icons mr-3"> -->
+                            <!-- <i class="fas fa-home"></i> home</a> -->
+							<a href="#addEmployeeModal" class="btn" style="background-color: #4caf50; color: white;" data-toggle="modal">
+								<i class="material-icons">&#xE147;</i> <span>Add New User</span>
+							</a>
+							
+						<button id="sendAlertBtn" class="btn btn-primary" data-toggle="modal">
+							<i class="material-icons">&#xE0BE;</i> <!-- Email icon -->
+							<span>Send Email</span>
+						</button>
+
+
+						<!-- New Compose Email button -->
+                        <!-- <button id="composeEmailBtn" class="btn btn-info" data-toggle="modal" data-target="#composeEmailModal">
+                            <i class="material-icons">&#xE163;</i>
+                            <span>Compose Email</span>
+                        </button> -->
+
+
+						<!-- Loading Spinner -->
+						<div id="loadingSpinner" style="display: none;">Sending...</div>
+
+						<div id="responseMessage"></div> 
+
+
+					</div>
+                </div>
+            </div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+						<th>
+							<span class="custom-checkbox">
+								<input type="checkbox" id="selectAll">
+								<label for="selectAll"></label>
+							</span>
+						</th>
+                        <th>Name</th>
+                        <th>Email</th>
+						<th>Department</th>
+                        <th>Phone</th>
+						<th>Make and Model</th>
+						<th>Reg Number</th>
+						<th>Due Date</th>
+						<th>Service Status</th>
+						<th>Mail</th>
+                        <th>Actions</th>
+						
+						
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in service %}
+                    <tr>
+						<td>
+							<span class="custom-checkbox">
+								<input type="checkbox" id="checkbox{{ forloop.counter }}" name="options[]" value="{{ i.id }}">
+								<label for="checkbox{{ forloop.counter }}"></label>
+							</span>
+						</td>
+						<td>{{ i.name }}</td>
+						<td>{{ i.email }}</td>
+						<td>{{ i.address }}</td>
+						<td>{{ i.phone }}</td>
+						<td>{{ i.vehicle_type }}</td>
+						<td>{{i.reg_number}}</td>
+						<td>{{i.due_date}}</td>
+						<td>{{ i.service_status }}</td>
+						<td>
+							<a href="#composeEmailModal-{{forloop.counter}}" class="email " data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Send Email">&#xE0BE;</i></a>
+						</td>
+						<td>
+                            <a href="#editEmployeeModal-{{forloop.counter}}" class="edit " data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+                            <a href="#deleteEmployeeModal-{{forloop.counter}}" class="delete " data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a> 
+						</td>
+
+                    </tr>
+                    {% endfor %}
+                    
+					
+                </tbody>
+            </table>
+			<div class="clearfix">
+                <!-- <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div> -->
+                <ul class="pagination">
+                    <li class="page-item disabled"><a href="#">Previous</a></li>
+                    <li class="page-item"><a href="#" class="page-link">1</a></li>
+                    <li class="page-item"><a href="#" class="page-link">2</a></li>
+                    <li class="page-item "><a href="#" class="page-link">3</a></li>
+                    <li class="page-item"><a href="#" class="page-link">4</a></li>
+                    <li class="page-item"><a href="#" class="page-link">5</a></li>
+                    <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+	<!-- add Modal HTML -->
+	<div id="addEmployeeModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form method="POST" action="{% url 'newapp:add_user' %}">
+					{% csrf_token %}
+					<div class="modal-header">						
+						<h4 class="modal-title">Add Users</h4>
+						<button type="submit" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					</div>
+					<div class="modal-body">					
+						<div class="form-group">
+							<label>Name</label>
+							<input name="name" type="text" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<label>Email</label>
+							<input name="email" type="email" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<label>Department</label>
+							<textarea name="address" class="form-control" required></textarea>
+						</div>
+						<div class="form-group">
+							<label>Phone</label>
+							<input name="phone" type="text" class="form-control" required>
+						</div>	
+						
+						<div class="form-group">
+							<label>Make nd Model</label>
+							<input name="vehicle_type" type="text" class="form-control" required>
+						</div>	
+
+						<div class="form-group">
+                            <label>Reg Number</label>
+                            <input name="reg_number" type="text" class="form-control" required>
+                        </div>
+
+						<div class="form-group">
+                            <label>Due Date </label>
+                            <input name="due_date" type="date" class="form-control" required>
+                        </div>
+
+						<div class="form-group">
+							<label>Service Status </label>
+							<input name="service_status" type="text" class="form-control" required>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+						<input type="submit" class="btn btn-success" value="Add">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Edit Modal HTML -->
+	{% for i in service %}
+	<div id="editEmployeeModal-{{forloop.counter}}" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form action="/edit/{{i.id}}/" method="post">
+
+					{% csrf_token %}
+					<div class="modal-header">						
+						<h4 class="modal-title">Edit User</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					</div>
+					<div class="modal-body">					
+						<div class="form-group">
+							<label>Name</label>
+							<input name="name" value="{{i.name}}" type="text" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<label>Email</label>
+							<input name="email" value="{{i.email}}" type="email" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<label>Department</label>
+							<textarea name="address" class="form-control" required>{{i.address}}</textarea>
+						</div>
+						<div class="form-group">
+							<label>Phone</label>
+							<input name="phone" value="{{i.phone}}" type="text" class="form-control" required>
+						</div>	
+						
+						<div class="form-group">
+							<label>Make and Model</label>
+							<input name="vehicle_type" value="{{i.vehicle_type}}" type="text" class="form-control" required>
+						</div>
+
+						<div class="form-group">
+                            <label>Reg Number</label>
+                            <input name="reg_number" value="{{i.reg_number}}" type="text" class="form-control" required>
+                        </div>
+
+						<div class="form-group">
+                            <label>Due Date </label>
+                            <input name="due_date" value="{{i.due_date}}" type="date" class="form-control" required>
+                        </div>
+
+						<div class="form-group">
+							<label>Service Status </label>
+							<input name="service_status" value="{{i.service_status}}" type="text" class="form-control" required>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+						<input type="submit" class="btn btn-info" value="Update">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+
+	
+
+	<!-- Delete Modal HTML -->
+
+	{% for i in service %}
+	<div id="deleteEmployeeModal-{{forloop.counter}}" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form>
+					<div class="modal-header">						
+						<h4 class="modal-title">Delete User</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					</div>
+					<div class="modal-body">					
+						<p>Are you sure you want to delete these Records?</p>
+						<p class="text-warning"><small>you want delete the records {{i.name}}</small></p>
+					</div>
+					<div class="modal-footer">
+						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+						<a href="{% url 'newapp:delete' i.id %}" type="button" class="btn btn-danger">Delete</a>
+
+
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+    
+    <!-- Compose Email Modal HTML -->
+    {% for i in service %}
+    <div id="composeEmailModal-{{ forloop.counter }}" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form action="{% url 'newapp:send_individual_email' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">                        
+                        <h4 class="modal-title">Compose Email to {{ i.name }}</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">                    
+                        <div class="form-group">
+                            <label>To</label>
+                            <input name="to_email" value="{{ i.email }}" type="email" class="form-control" readonly>
+                            <input name="user_id" value="{{ i.id }}" type="hidden">
+                        </div>
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <input name="subject" type="text" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Message</label>
+                            <textarea name="message" class="form-control" rows="6" required></textarea>
+                        </div>
+                        <!-- File Attachment Section -->
+                        <div class="form-group">
+                            <label>Attach File</label>
+                            <input type="file" name="attachment" class="form-control">
+                        </div>
+                        <!-- Add user data for reference -->
+                        <div class="well well-sm mt-3">
+                            <h5>User Information (for reference)</h5>
+                            <table class="table table-borderless table-sm">
+                                <tr>
+                                    <th style="width: 150px;">Name:</th>
+                                    <td>{{ i.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Department:</th>
+                                    <td>{{ i.address }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Vehicle:</th>
+                                    <td>{{ i.vehicle_type }} ({{ i.reg_number }})</td>
+                                </tr>
+                                <tr>
+                                    <th>Due Date:</th>
+                                    <td>{{ i.due_date }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Service Status:</th>
+                                    <td>{{ i.service_status }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                        <button type="submit" class="btn btn-primary">Send Email</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+</body>
+
+<script>
+    $(document).ready(function(){
+	// Activate tooltip
+	$('[data-toggle="tooltip"]').tooltip();
+	
+	// Select/Deselect checkboxes
+	var checkbox = $('table tbody input[type="checkbox"]');
+	$("#selectAll").click(function(){
+		if(this.checked){
+			checkbox.each(function(){
+				this.checked = true;                        
+			});
+		} else{
+			checkbox.each(function(){
+				this.checked = false;                        
+			});
+		} 
+	});
+	checkbox.click(function(){
+		if(!this.checked){
+			$("#selectAll").prop("checked", false);
+		}
+	});
+});
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    function attachPaginationEventListeners() {
+        const paginationLinks = document.querySelectorAll(".pagination .page-link");
+        paginationLinks.forEach(link => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+                const page = this.textContent.trim();
+                
+                fetch(`/your-endpoint?page=${page}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        updateTable(data.entries);
+                        updatePagination(data.current_page, data.total_pages);
+                        attachPaginationEventListeners(); // Re-attach event listeners
+                    })
+                    .catch(error => console.error("Error fetching data:", error));
+            });
+        });
+    }
+
+    attachPaginationEventListeners(); // Initial binding of event listeners
+});
+
+    function updateTable(entries) {
+        const tbody = document.querySelector("tbody");
+        tbody.innerHTML = ""; // Clear current rows
+        entries.forEach(entry => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${entry.column1}</td>
+                <td>${entry.column2}</td>
+                <td>${entry.column3}</td>
+                <td>${entry.column4}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function updatePagination(currentPage, totalPages) {
+        const pagination = document.querySelector(".pagination");
+        pagination.innerHTML = ""; // Clear current pagination
+        for (let i = 1; i <= totalPages; i++) {
+            const li = document.createElement("li");
+            li.className = `page-item ${i === currentPage ? "active" : ""}`;
+            li.innerHTML = `<a href="#" class="page-link">${i}</a>`;
+            pagination.appendChild(li);
+        }
+    };
+
+
+
+document.getElementById("sendAlertBtn").addEventListener("click", function() {
+    // Show the loading spinner
+    document.getElementById("loadingSpinner").style.display = "block";
+
+    // Create a POST request to send the alert
+    fetch("{% url 'newapp:send_alert' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}',  // Add the CSRF token to the request
+        },
+        body: JSON.stringify({}) // Empty body as no additional data is needed
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("loadingSpinner").style.display = "none";  // Hide the spinner
+
+        if (data.success) {
+            // If successful, show success message
+            document.getElementById("responseMessage").innerText = "Alert email sent successfully to users with 'Pending' status!";
+            document.getElementById("responseMessage").style.color = "green";
+        } else {
+            // If failure, show error message from the backend
+            document.getElementById("responseMessage").innerText = "Failed to send email: " + data.error;
+            document.getElementById("responseMessage").style.color = "red";
+        }
+    })
+    .catch(error => {
+        document.getElementById("loadingSpinner").style.display = "none";  // Hide the spinner on error
+        // Show error in case of a network or other unexpected error
+        document.getElementById("responseMessage").innerText = "Error: " + error;
+        document.getElementById("responseMessage").style.color = "red";
+    });
+});
+
+// Functions for the compose email form
+$('.email').click(function() {
+    const modalId = $(this).attr('href');
+    $(modalId).modal('show');
+    
+    // Auto-generate a subject line based on the vehicle and status
+    const row = $(this).closest('tr');
+    const name = row.find('td:eq(1)').text().trim();
+    const vehicle = row.find('td:eq(5)').text().trim();
+    const regNumber = row.find('td:eq(6)').text().trim();
+    const status = row.find('td:eq(8)').text().trim();
+    
+    // Set a default subject line based on the service status
+    let subject = '';
+    if (status.toLowerCase() === 'pending') {
+        subject = `Reminder: Vehicle Service Due for ${vehicle} (${regNumber})`;
+    } else if (status.toLowerCase() === 'completed') {
+        subject = `Service Completed: ${vehicle} (${regNumber})`;
+    } else {
+        subject = `Vehicle Service Update: ${vehicle} (${regNumber})`;
+    }
+    
+    $(modalId).find('input[name="subject"]').val(subject);
+    
+    // Generate default message based on status
+    let message = '';
+    if (status.toLowerCase() === 'pending') {
+        message = `Dear ${name},\n\nThis is a friendly reminder that your vehicle (${vehicle}, Registration: ${regNumber}) is due for service.\n\nPlease contact our service department to schedule an appointment at your earliest convenience.\n\nThank you,\nVehicle Management Team`;
+    } else if (status.toLowerCase() === 'completed') {
+        message = `Dear ${name},\n\nWe are pleased to inform you that the service for your vehicle (${vehicle}, Registration: ${regNumber}) has been completed.\n\nPlease feel free to contact us if you have any questions.\n\nThank you,\nVehicle Management Team`;
+    } else {
+        message = `Dear ${name},\n\nThis is an update regarding your vehicle (${vehicle}, Registration: ${regNumber}).\n\nCurrent service status: ${status}\n\nPlease let us know if you have any questions.\n\nThank you,\nVehicle Management Team`;
+    }
+    
+    $(modalId).find('textarea[name="message"]').val(message);
+});
+
+</script>
+
+
+</html>
