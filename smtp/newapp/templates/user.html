@@ -600,7 +600,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 e.preventDefault();
                 const page = this.textContent.trim();
                 
-                fetch(`/your-endpoint?page=${page}`)
+                fetch(`/table_view?page=${page}`)
                     .then(response => response.json())
                     .then(data => {
                         updateTable(data.entries);

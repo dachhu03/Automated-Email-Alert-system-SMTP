@@ -13,5 +13,6 @@ urlpatterns = [
     path('delete/<str:id>/', delete , name='delete'),
     path('send-alert/', send_alert, name='send_alert'),
     path('send_individual_email', send_individual_email , name='send_individual_email'),
+    path('table_view', table_view , name='table_view'),
     
 ]
