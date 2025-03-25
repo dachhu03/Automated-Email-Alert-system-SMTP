@@ -16,7 +16,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 # Ensure MEDIA_ROOT is properly configured in settings.py
 MEDIA_ROOT = getattr(settings, 'MEDIA_ROOT', 'media')
 MEDIA_URL = getattr(settings, 'MEDIA_URL', '/media/')
@@ -33,13 +32,11 @@ def login_view(request):
             messages.error(request, "Invalid username or password.")
     return render(request, 'login.html')
 
-
 @login_required
 def home(request):
-    total_users = Employee.objects.count()  # Count all employees
-    services_done = Employee.objects.filter(service_status="Done").count()  # Count completed services
-    services_pending = Employee.objects.filter(service_status="Pending").count()  # Count pending services
-
+    total_users = Employee.objects.count()
+    services_done = Employee.objects.filter(service_status="Done").count()
+    services_pending = Employee.objects.filter(service_status="Pending").count()
     two_wheeler_count = Employee.objects.filter(vehicle_type="2W").count()
     four_wheeler_count = Employee.objects.filter(vehicle_type="4W").count()
 
@@ -52,16 +49,18 @@ def home(request):
     }
     return render(request, 'home.html', context)
 
-
-# List and Create View
+# List and Create View with Pagination
 @login_required
 def user(request):
     service = Employee.objects.all()
+    paginator = Paginator(service, 5)  # Show 5 entries per page
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'service': service,
+        'page_obj': page_obj,  # Use page_obj instead of service for pagination
     }
     return render(request, 'user.html', context)
-
 
 def add_user(request):
     if request.method == "POST":
@@ -89,65 +88,52 @@ def add_user(request):
 
     return render(request, 'user.html')  # Optional for GET request handling
 
-
+@login_required
 def edit_user(request):
     service = Employee.objects.all()
+    paginator = Paginator(service, 5)  # Show 5 entries per page
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'service': service,
+        'page_obj': page_obj,  # Use page_obj instead of service for pagination
     }
     return render(request, 'user.html', context)
 
-
 def edit(request, id):
-    # Retrieve the existing Employee object using id
     employee = get_object_or_404(Employee, id=id)
 
     if request.method == 'POST':
-        # Update the fields with the data from the form
         employee.name = request.POST.get('name')
         employee.email = request.POST.get('email')
         employee.address = request.POST.get('address')
         employee.phone = request.POST.get('phone')
         employee.vehicle_type = request.POST.get('vehicle_type')
         employee.reg_number = request.POST.get('reg_number')
-        employee.due_date = request.POST.get('due_date')  # Assuming due_date is a date field in your model
+        employee.due_date = request.POST.get('due_date')
         employee.service_status = request.POST.get('service_status')
-
-        # Save the updated employee
         employee.save()
-
-        # Redirect to the same user list page after saving
         return redirect('newapp:user')
 
-    # For GET requests, pass the existing employee to the template
     return render(request, 'user.html', {'employee': employee})
-
 
 def delete(request, id):
     user = get_object_or_404(Employee, id=id)
     user.delete()
     return redirect('newapp:user')
 
-
 def table_view(request):
-    entries = Employee.objects.all()  # Replace MyModel with your actual model
-    paginator = Paginator(entries, 5)  # Show 5 entries per page
+    entries = Employee.objects.all()
+    paginator = Paginator(entries, 5)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
-
     return render(request, 'user.html', {'page_obj': page_obj})
-
 
 @login_required
 def send_alert(request):
-    """
-    View to send custom email alerts with a PDF attachment to all users in the Employee table where service status is 'Pending'.
-    """
     if request.method == 'POST':
-        subject = request.POST.get('subject', 'Service Alert From PZ')  # Default subject
-        message = request.POST.get('message', 'Dear User,\n\nThis is an important alert from our service center. Please take the necessary actions.\n\nThank you!\n\nBest Regards,\nPZ Team.')  # Default message
-        
-        # Fetch all user emails where service_status is 'Pending'
+        subject = request.POST.get('subject', 'Service Alert From PZ')
+        message = request.POST.get('message', 'Dear User,\n\nThis is an important alert from our service center. Please take the necessary actions.\n\nThank you!\n\nBest Regards,\nPZ Team.')
         recipient_list = Employee.objects.filter(service_status='Pending').values_list('email', flat=True)
         
         if recipient_list:
@@ -158,21 +144,16 @@ def send_alert(request):
                     from_email=settings.EMAIL_HOST_USER,
                     to=list(recipient_list),
                 )
-                
-                # Define PDF path in media directory
-                pdf_filename = 'test.pdf'  # Ensure correct path inside media/
+                pdf_filename = 'test.pdf'
                 pdf_path = os.path.join(settings.MEDIA_ROOT, pdf_filename)
                 
-                # Check if file exists
                 if os.path.exists(pdf_path):
                     with open(pdf_path, 'rb') as pdf_file:
-                        email.attach(pdf_filename, pdf_file.read(), 'application/pdf')  # Correct MIME type
+                        email.attach(pdf_filename, pdf_file.read(), 'application/pdf')
                 else:
                     return JsonResponse({'success': False, 'error': 'PDF attachment not found'})
                 
-                # Send email
                 email.send(fail_silently=False)
-                
                 return JsonResponse({'success': True})
             except Exception as e:
                 return JsonResponse({'success': False, 'error': f"Error sending email: {str(e)}"})
@@ -181,13 +162,12 @@ def send_alert(request):
     
     return render(request, 'send_alert.html')
 
-
 def send_individual_email(request):
     if request.method == "POST":
         to_email = request.POST.get("to_email")
         subject = request.POST.get("subject")
         message = request.POST.get("message")
-        attachment = request.FILES.get("attachment")  # Get file from form
+        attachment = request.FILES.get("attachment")
 
         try:
             email = EmailMessage(
@@ -196,20 +176,20 @@ def send_individual_email(request):
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 to=[to_email],
             )
-
-            # Attach file if exists
             if attachment:
                 email.attach(attachment.name, attachment.read(), attachment.content_type)
-
             email.send()
             messages.success(request, "Email sent successfully.")
         except Exception as e:
             messages.error(request, f"Error sending email: {e}")
 
-        return redirect("newapp:user")  # Redirect to service list
+        return redirect("newapp:user")
 
-    return redirect("newapp:user")  # Redirect if accessed via GET
+    return redirect("newapp:user")
 
 def service_list(request):
     services = Employee.objects.all()
-    return render(request, "user.html", {"service": services})
+    paginator = Paginator(services, 5)  # Show 5 entries per page
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, "user.html", {"page_obj": page_obj})

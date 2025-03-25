@@ -11,9 +11,12 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<style>
-    body {
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+     body {
         color: #566787;
         background: #f5f5f5;
         font-family: 'Varela Round', sans-serif;
@@ -43,6 +46,7 @@
     }
     .table-title .btn {
         color: #fff;
+       
         float: right;
         font-size: 13px;
         border: none;
@@ -82,7 +86,7 @@
         font-size: 13px;
         margin: 0 5px;
         cursor: pointer;
-    }   
+    }    
     table.table td:last-child i {
         opacity: 0.9;
         font-size: 22px;
@@ -133,7 +137,7 @@
     }
     .pagination li a:hover {
         color: #666;
-    }   
+    }    
     .pagination li.active a, .pagination li.active a.page-link {
         background: #03A9F4;
     }
@@ -152,6 +156,7 @@
         margin-top: 10px;
         font-size: 13px;
     }    
+    /* Custom checkbox */
     .custom-checkbox {
         position: relative;
     }
@@ -202,6 +207,7 @@
         box-shadow: none;
         background: #ddd;
     }
+    /* Modal styles */
     .modal .modal-dialog {
         max-width: 400px;
     }
@@ -229,11 +235,12 @@
     .modal .btn {
         border-radius: 2px;
         min-width: 100px;
-    }   
+    }    
     .modal form label {
         font-weight: normal;
     }
-</style>
+  </style>
+</head>
 <body>
     <div class="container">
         <div class="table-wrapper">
@@ -247,11 +254,12 @@
                             <i class="material-icons"></i> <span>Add New User</span>
                         </a>
                         <button id="sendAlertBtn" class="btn btn-primary" data-toggle="modal">
-                            <i class="material-icons"></i>
+                            <i class="material-icons"></i> <!-- Email icon -->
                             <span>Send Email</span>
                         </button>
+                        <!-- Loading Spinner -->
                         <div id="loadingSpinner" style="display: none;">Sending...</div>
-                        <div id="responseMessage"></div>
+                        <div id="responseMessage"></div> 
                     </div>
                 </div>
             </div>
@@ -277,7 +285,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for i in service %}
+                    {% for i in page_obj %}
                     <tr>
                         <td>
                             <span class="custom-checkbox">
@@ -290,29 +298,53 @@
                         <td>{{ i.address }}</td>
                         <td>{{ i.phone }}</td>
                         <td>{{ i.vehicle_type }}</td>
-                        <td>{{i.reg_number}}</td>
-                        <td>{{i.due_date}}</td>
+                        <td>{{ i.reg_number }}</td>
+                        <td>{{ i.due_date }}</td>
                         <td>{{ i.service_status }}</td>
                         <td>
-                            <a href="#composeEmailModal-{{forloop.counter}}" class="email" data-toggle="modal">
-                                <i class="material-icons" data-toggle="tooltip" title="Send Email"></i>
-                            </a>
+                            <a href="#composeEmailModal-{{forloop.counter}}" class="email" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Send Email"></i></a>
                         </td>
                         <td>
-                            <a href="#editEmployeeModal-{{forloop.counter}}" class="edit" data-toggle="modal">
-                                <i class="material-icons" data-toggle="tooltip" title="Edit"></i>
-                            </a>
-                            <a href="#deleteEmployeeModal-{{forloop.counter}}" class="delete" data-toggle="modal">
-                                <i class="material-icons" data-toggle="tooltip" title="Delete"></i>
-                            </a>
+                            <a href="#editEmployeeModal-{{forloop.counter}}" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit"></i></a>
+                            <a href="#deleteEmployeeModal-{{forloop.counter}}" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete"></i></a> 
                         </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="11">No records found.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
             <div class="clearfix">
-                <div class="hint-text"></div>
-                <ul class="pagination"></ul>
+                <div class="hint-text">
+                    Showing <b>{{ page_obj.start_index }}-{{ page_obj.end_index }}</b> out of <b>{{ page_obj.paginator.count }}</b> entries
+                </div>
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a href="?page=1" class="page-link">« First</a></li>
+                        <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}" class="page-link">Previous</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><a href="#" class="page-link">« First</a></li>
+                        <li class="page-item disabled"><a href="#" class="page-link">Previous</a></li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active"><a href="#" class="page-link">{{ num }}</a></li>
+                        {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+                            <li class="page-item"><a href="?page={{ num }}" class="page-link">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a></li>
+                        <li class="page-item"><a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">Last »</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><a href="#" class="page-link">Next</a></li>
+                        <li class="page-item disabled"><a href="#" class="page-link">Last »</a></li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </div>
@@ -345,7 +377,7 @@
                             <input name="phone" type="text" class="form-control" required>
                         </div>    
                         <div class="form-group">
-                            <label>Make nd Model</label>
+                            <label>Make and Model</label>
                             <input name="vehicle_type" type="text" class="form-control" required>
                         </div>    
                         <div class="form-group">
@@ -371,7 +403,7 @@
     </div>
 
     <!-- Edit Modal HTML -->
-    {% for i in service %}
+    {% for i in page_obj %}
     <div id="editEmployeeModal-{{forloop.counter}}" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -426,7 +458,7 @@
     {% endfor %}
 
     <!-- Delete Modal HTML -->
-    {% for i in service %}
+    {% for i in page_obj %}
     <div id="deleteEmployeeModal-{{forloop.counter}}" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -437,7 +469,7 @@
                     </div>
                     <div class="modal-body">                    
                         <p>Are you sure you want to delete these Records?</p>
-                        <p class="text-warning"><small>you want delete the records {{i.name}}</small></p>
+                        <p class="text-warning"><small>You want to delete the records for {{i.name}}</small></p>
                     </div>
                     <div class="modal-footer">
                         <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
@@ -450,7 +482,7 @@
     {% endfor %}
     
     <!-- Compose Email Modal HTML -->
-    {% for i in service %}
+    {% for i in page_obj %}
     <div id="composeEmailModal-{{ forloop.counter }}" class="modal fade">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -474,18 +506,35 @@
                             <label>Message</label>
                             <textarea name="message" class="form-control" rows="6" required></textarea>
                         </div>
+                        <!-- File Attachment Section -->
                         <div class="form-group">
                             <label>Attach File</label>
                             <input type="file" name="attachment" class="form-control">
                         </div>
+                        <!-- Add user data for reference -->
                         <div class="well well-sm mt-3">
                             <h5>User Information (for reference)</h5>
                             <table class="table table-borderless table-sm">
-                                <tr><th style="width: 150px;">Name:</th><td>{{ i.name }}</td></tr>
-                                <tr><th>Department:</th><td>{{ i.address }}</td></tr>
-                                <tr><th>Vehicle:</th><td>{{ i.vehicle_type }} ({{ i.reg_number }})</td></tr>
-                                <tr><th>Due Date:</th><td>{{ i.due_date }}</td></tr>
-                                <tr><th>Service Status:</th><td>{{ i.service_status }}</td></tr>
+                                <tr>
+                                    <th style="width: 150px;">Name:</th>
+                                    <td>{{ i.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Department:</th>
+                                    <td>{{ i.address }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Vehicle:</th>
+                                    <td>{{ i.vehicle_type }} ({{ i.reg_number }})</td>
+                                </tr>
+                                <tr>
+                                    <th>Due Date:</th>
+                                    <td>{{ i.due_date }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Service Status:</th>
+                                    <td>{{ i.service_status }}</td>
+                                </tr>
                             </table>
                         </div>
                     </div>
@@ -498,11 +547,14 @@
         </div>
     </div>
     {% endfor %}
+</body>
 
 <script>
 $(document).ready(function(){
+    // Activate tooltip
     $('[data-toggle="tooltip"]').tooltip();
     
+    // Select/Deselect checkboxes
     var checkbox = $('table tbody input[type="checkbox"]');
     $("#selectAll").click(function(){
         if(this.checked){
@@ -522,107 +574,22 @@ $(document).ready(function(){
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const ITEMS_PER_PAGE = 5;
-    let currentPage = 1;
-    
-    function attachPaginationEventListeners() {
-        const paginationLinks = document.querySelectorAll(".pagination .page-link:not(.prev):not(.next)");
-        paginationLinks.forEach(link => {
-            link.addEventListener("click", function (e) {
-                e.preventDefault();
-                currentPage = parseInt(this.textContent);
-                updateTableDisplay();
-                updatePaginationDisplay();
-            });
-        });
-
-        document.querySelector('.pagination .prev')?.addEventListener("click", function(e) {
-            e.preventDefault();
-            if (currentPage > 1) {
-                currentPage--;
-                updateTableDisplay();
-                updatePaginationDisplay();
-            }
-        });
-
-        document.querySelector('.pagination .next')?.addEventListener("click", function(e) {
-            e.preventDefault();
-            const totalPages = Math.ceil(getAllRows().length / ITEMS_PER_PAGE);
-            if (currentPage < totalPages) {
-                currentPage++;
-                updateTableDisplay();
-                updatePaginationDisplay();
-            }
-        });
-    }
-
-    function getAllRows() {
-        return Array.from(document.querySelectorAll("tbody tr"));
-    }
-
-    function updateTableDisplay() {
-        const allRows = getAllRows();
-        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-        const endIndex = startIndex + ITEMS_PER_PAGE;
-
-        allRows.forEach(row => row.style.display = "none");
-        allRows.slice(startIndex, endIndex).forEach(row => {
-            row.style.display = "";
-        });
-
-        const totalEntries = allRows.length;
-        const showing = Math.min(ITEMS_PER_PAGE, totalEntries - startIndex);
-        document.querySelector(".hint-text").innerHTML = 
-            `Showing <b>${showing}</b> out of <b>${totalEntries}</b> entries`;
-    }
-
-    function updatePaginationDisplay() {
-        const allRows = getAllRows();
-        const totalPages = Math.ceil(allRows.length / ITEMS_PER_PAGE);
-        
-        let paginationHTML = `
-            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-                <a href="#" class="page-link prev">Previous</a>
-            </li>
-        `;
-
-        for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `
-                <li class="page-item ${i === currentPage ? 'active' : ''}">
-                    <a href="#" class="page-link">${i}</a>
-                </li>
-            `;
-        }
-
-        paginationHTML += `
-            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-                <a href="#" class="page-link next">Next</a>
-            </li>
-        `;
-
-        document.querySelector(".pagination").innerHTML = paginationHTML;
-        attachPaginationEventListeners();
-    }
-
-    updateTableDisplay();
-    updatePaginationDisplay();
-});
-
 document.getElementById("sendAlertBtn").addEventListener("click", function() {
+    // Show the loading spinner
     document.getElementById("loadingSpinner").style.display = "block";
 
+    // Create a POST request to send the alert
     fetch("{% url 'newapp:send_alert' %}", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token }}',
+            'X-CSRFToken': '{{ csrf_token }}',  // Add the CSRF token to the request
         },
-        body: JSON.stringify({})
+        body: JSON.stringify({}) // Empty body as no additional data is needed
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById("loadingSpinner").style.display = "none";
+        document.getElementById("loadingSpinner").style.display = "none";  // Hide the spinner
         if (data.success) {
             document.getElementById("responseMessage").innerText = "Alert email sent successfully to users with 'Pending' status!";
             document.getElementById("responseMessage").style.color = "green";
@@ -632,26 +599,29 @@ document.getElementById("sendAlertBtn").addEventListener("click", function() {
         }
     })
     .catch(error => {
-        document.getElementById("loadingSpinner").style.display = "none";
+        document.getElementById("loadingSpinner").style.display = "none";  // Hide the spinner on error
         document.getElementById("responseMessage").innerText = "Error: " + error;
         document.getElementById("responseMessage").style.color = "red";
     });
 });
 
+// Functions for the compose email form
 $('.email').click(function() {
     const modalId = $(this).attr('href');
     $(modalId).modal('show');
     
+    // Auto-generate a subject line based on the vehicle and status
     const row = $(this).closest('tr');
     const name = row.find('td:eq(1)').text().trim();
     const vehicle = row.find('td:eq(5)').text().trim();
     const regNumber = row.find('td:eq(6)').text().trim();
     const status = row.find('td:eq(8)').text().trim();
     
+    // Set a default subject line based on the service status
     let subject = '';
     if (status.toLowerCase() === 'pending') {
         subject = `Reminder: Vehicle Service Due for ${vehicle} (${regNumber})`;
-    }    else if (status.toLowerCase() === 'completed') {
+    } else if (status.toLowerCase() === 'completed') {
         subject = `Service Completed: ${vehicle} (${regNumber})`;
     } else {
         subject = `Vehicle Service Update: ${vehicle} (${regNumber})`;
@@ -659,6 +629,7 @@ $('.email').click(function() {
     
     $(modalId).find('input[name="subject"]').val(subject);
     
+    // Generate default message based on status
     let message = '';
     if (status.toLowerCase() === 'pending') {
         message = `Dear ${name},\n\nThis is a friendly reminder that your vehicle (${vehicle}, Registration: ${regNumber}) is due for service.\n\nPlease contact our service department to schedule an appointment at your earliest convenience.\n\nThank you,\nVehicle Management Team`;
@@ -671,5 +642,4 @@ $('.email').click(function() {
     $(modalId).find('textarea[name="message"]').val(message);
 });
 </script>
-</body>
 </html>
